@@ -1,4 +1,3 @@
-const session = require('express-session');
 const users = require('../../models')
 
 module.exports = {
