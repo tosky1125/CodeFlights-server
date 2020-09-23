@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   likes.init({
+    like: DataTypes.INTEGER,
     userID: DataTypes.INTEGER,
     articleID: DataTypes.INTEGER
   }, {
