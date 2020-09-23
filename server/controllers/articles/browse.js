@@ -1,4 +1,4 @@
-const articles = require('../../models')
+const { articles } = require('../../models')
 
 module.exports = {
   browse: (req, res) => {
