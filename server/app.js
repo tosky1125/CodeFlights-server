@@ -18,7 +18,7 @@ app.use(express.urlencoded({
   extended: false
 }));
 
-app.get('/', )
+app.get('/', () => console.log('hello world'))
 app.use('/user', usersRouter);
 
 app.listen(port, () => {
