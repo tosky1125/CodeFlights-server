@@ -29,11 +29,12 @@ try {
 app.use(session({
   secret: 'codeflightsLTD@',
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true,
+  cookie : {sameSite: 'none', secure : true }
 }));
 
 app.use(cors({
-	origin : ["http://localhost:3000"]
+	origin : ["https://d1qcoqyvau5emh.cloudfront.net"]
 	,	credentials : true
 }));
 app.use(morgan('combined'));
