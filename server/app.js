@@ -6,9 +6,11 @@ const app = express();
 const port = '443';
 const usersRouter = require('./routes/users')
 const postRouter = require('./routes/posts')
+const searchRouter = require('./routes/search')
 const fs = require('fs');
 const path = require('path');
 const HTTPS = require('https');
+const search = require('./controllers/search');
 const ssl = '80'
 
 
@@ -49,6 +51,7 @@ app.get('/', (req, res) => {
 )
 
 app.use('/user', usersRouter);
-app.use('/post', postRouter)
+app.use('/post', postRouter);
+app.use('/search', searchRouter);
 app.listen(ssl, () => console.log(`http server is on ${ssl}`))
 
