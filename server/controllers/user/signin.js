@@ -18,9 +18,9 @@ module.exports = {
       }))
       else {
         session.userid = result.id;
-        res.status(201).send(JSON.stringify({
-          status: true
-        }))
+        res.status(201).json({
+           id:result.id
+        })
       }
     })
   }
