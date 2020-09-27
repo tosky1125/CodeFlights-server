@@ -1,5 +1,4 @@
 const moment = require('moment');
-const { flights } = require('../../models');
 
 module.exports = {
     get: (req, res) => {
