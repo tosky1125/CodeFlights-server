@@ -36,7 +36,7 @@ app.use(session({
 }));
 
 app.use(cors({
-	origin : ["https://dnsvehc34bi59.cloudfront.net/"]
+	origin : ["https://dox4770prx0oi.cloudfront.net"]
 	,	credentials : true
 }));
 app.use(morgan('combined'));
