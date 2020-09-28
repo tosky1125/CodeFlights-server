@@ -5,7 +5,7 @@ module.exports = {
 	console.log(req.query);
         // case: query string is departure and arrival 
         if (!req.query.departureDate || !req.query.arrivalDate) {
-            res.status(404).send('error: fullfill all requried query string')
+            res.status(404).send({error: 'fullfill all requried query string'})
         } else {
             let departureWithSch = moment().add(Number(req.query.departureDate), 'd').format('YYYYMMDDHHmm');
     
@@ -19,7 +19,7 @@ module.exports = {
                 res.redirect(301, '/search/result');
               // if sessions are not sended, send status 404 with error message
             } else {
-                res.status(404).send('error: sessions are not set yet');
+                res.status(404).send({error: 'sessions are not set yet'});
             }
         }
     }
