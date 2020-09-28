@@ -8,18 +8,22 @@ const parsePost = blog.parsePost;
 
 module.exports = {
     get: async (req, res) => {
-        // session check
-        if (!req.session.departureDate || !req.session.arrivalDate) {
-            res.status(404).send("invalid request");
-        } 
-        else {
+console.log(req.session)
+console.log(req.query.city)
+	    // session check
+//        if (!req.session.departureDate || !req.session.arrivalDate) {
+console.log('난가')
+//		res.status(404).send("invalid request");
+  //      } 
+  //      else {
             // date from session
-            let departure = req.session.departure;
-            let arrival = req.session.arrival;
+           let departure = req.session.departureDate;
+            let arrival = req.session.arrivalDate;
 
             // // dummy data
-            // let departure = 202009290000;
-            // let arrival = 202010100000;
+          //   let departure = 202010010853;
+	    
+           //  let arrival = 202010040853;
             
             let flightsAndPosting = {};
             let availableFlights = [];
@@ -27,11 +31,12 @@ module.exports = {
             let postingFromDB = [];
 
             // queryString check 
-            if (!req.query.destination) {
-                res.stauts(404).send('invalid request');
+            if (!req.query.city) {
+console.log('너냐 ')
+		    res.status(404).send('invalid request');
             } else {
                 // finding flights
-                let cityKor = req.query.destination;
+                let cityKor = req.query.city;
                 let flightsList = await flights.findAll({
                     where: {portName: {[Op.substring]: cityKor}},
                     raw: true
@@ -68,7 +73,8 @@ module.exports = {
                     where: {title: {[Op.substring]: cityKor}},
                     raw: true
                 });
-                if (articlesFromDB.length = 0) {
+		console.log(articlesFromDB)
+                if (articlesFromDB.length === 0) {
                     flightsAndPosting.userPostings = null;
                     res.send(flightsAndPosting);
                 } else {
@@ -79,6 +85,6 @@ module.exports = {
                     res.send(flightsAndPosting);
                 }
             }
-        }
+        //}
     }
 }

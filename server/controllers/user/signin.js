@@ -17,7 +17,8 @@ module.exports = {
       }))
       else {
         session.userid = result.id;
-        res.status(201).json({
+        console.log(`this is ${JSON.stringify(session)}`)
+	      res.status(201).json({
           id:result.id
         })
       }
