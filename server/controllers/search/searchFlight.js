@@ -8,83 +8,75 @@ const parsePost = blog.parsePost;
 
 module.exports = {
     get: async (req, res) => {
-console.log(req.session)
-console.log(req.query.city)
 	    // session check
-//        if (!req.session.departureDate || !req.session.arrivalDate) {
-console.log('난가')
-//		res.status(404).send("invalid request");
-  //      } 
-  //      else {
-            // date from session
-           let departure = req.session.departureDate;
-            let arrival = req.session.arrivalDate;
+       if (!req.session.departureDate || !req.session.arrivalDate) {
+		res.status(404).send({error: 'there is no needed session'});
+       } 
+       else {
+        // date from session
+        let departure = req.session.departureDate;
+        let arrival = req.session.arrivalDate;
+        // dummy data
+        // let departure = 202010010853;
+        // let arrival = 202010040853;
+        let flightsAndPosting = {};
+        let availableFlights = [];
+        let positngFromBlog = [];
+        let postingFromDB = [];
 
-            // // dummy data
-          //   let departure = 202010010853;
-	    
-           //  let arrival = 202010040853;
-            
-            let flightsAndPosting = {};
-            let availableFlights = [];
-            let positngFromBlog = [];
-            let postingFromDB = [];
-
-            // queryString check 
-            if (!req.query.city) {
-console.log('너냐 ')
-		    res.status(404).send('invalid request');
+        // queryString check 
+        if (!req.query.city) {
+            res.status(404).send({error: 'there is no query string'});
+        } else {
+            // finding flights
+            let cityKor = req.query.city;
+            let flightsList = await flights.findAll({
+                where: {portName: {[Op.substring]: cityKor}},
+                raw: true
+            });
+            if (flightsList.length === 0) {
+                flightsAndPosting.flights = null;
             } else {
-                // finding flights
-                let cityKor = req.query.city;
-                let flightsList = await flights.findAll({
-                    where: {portName: {[Op.substring]: cityKor}},
-                    raw: true
+                flightsList.map(arg => {
+                    // console.log(arg)
+                    if(arg.portName.includes('/')) {
+                        arg.portName = arg.portName.slice(0, arg.portName.indexOf('/'));
+                    }
+                    if (Number(arg.estTime) > departure && Number(arg.estTime) < arrival &&
+                        Number(arg.schTime) > departure && Number(arg.schTime) < arrival) {
+                        availableFlights.push({
+                            city: arg.portName,
+                            carrier: arg.airName,
+                            carrierNo: arg.airID,
+                            departure: moment(arg.estTime, 'YYYYMMDDHHmm').format("YYYY년 MM월 DD일 HH시 MM분")
+                        });
+                    }
                 });
-                if (flightsList.length === 0) {
-                    flightsAndPosting.flights = null;
-                } else {
-                    flightsList.map(arg => {
-                        // console.log(arg)
-                        if(arg.portName.includes('/')) {
-                            arg.portName = arg.portName.slice(0, arg.portName.indexOf('/'));
-                        }
-                        if (Number(arg.estTime) > departure && Number(arg.estTime) < arrival &&
-                            Number(arg.schTime) > departure && Number(arg.schTime) < arrival) {
-                            availableFlights.push({
-                                city: arg.portName,
-                                carrier: arg.airName,
-                                carrierNo: arg.airID,
-                                departure: moment(arg.estTime, 'YYYYMMDDHHmm').format("YYYY년 MM월 DD일 HH시 MM분")
-                            });
-                        }
-                    });
-                    flightsAndPosting.flights = availableFlights;
-                }
-                // parse blog posting
-                let blogPostings = await parsePost(cityKor);
-                blogPostings.map(arg => {
-                    positngFromBlog.push(arg);
-                });
-                flightsAndPosting.blogPostings = positngFromBlog;
-                
-                // getting articles from DB
-                let articlesFromDB = await articles.findAll({
-                    where: {title: {[Op.substring]: cityKor}},
-                    raw: true
-                });
-		console.log(articlesFromDB)
-                if (articlesFromDB.length === 0) {
-                    flightsAndPosting.userPostings = null;
-                    res.send(flightsAndPosting);
-                } else {
-                    articlesFromDB.map(arg => {
-                        postingFromDB.push(arg);
-                    });
-                    flightsAndPosting.userPostings = articlesFromDB;
-                    res.send(flightsAndPosting);
-                }
+                flightsAndPosting.flights = availableFlights;
             }
-        //}
+            // parse blog posting
+            let blogPostings = await parsePost(cityKor);
+            blogPostings.map(arg => {
+                positngFromBlog.push(arg);
+            });
+            flightsAndPosting.blogPostings = positngFromBlog;
+            
+            // getting articles from DB
+            let articlesFromDB = await articles.findAll({
+                where: {title: {[Op.substring]: cityKor}},
+                raw: true
+            });
+            if (articlesFromDB.length === 0) {
+                flightsAndPosting.userPostings = null;
+                res.send(flightsAndPosting);
+            } else {
+                articlesFromDB.map(arg => {
+                    postingFromDB.push(arg);
+                });
+                flightsAndPosting.userPostings = articlesFromDB;
+                res.send(flightsAndPosting);
+            }
+        }
     }
+  }
 }
