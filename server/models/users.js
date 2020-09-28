@@ -1,4 +1,6 @@
 'use strict';
+const crypto = require('crypto');
+
 const {
   Model
 } = require('sequelize');
@@ -18,6 +20,20 @@ module.exports = (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     password: DataTypes.STRING
   }, {
+    hooks: {
+      beforeCreate: (data, option) => {
+        var sha256 = crypto.createHmac('sha256', 'thisismysecretkey');
+        sha256.update(data.password);
+        data.password = sha256.digest('hex');
+      },
+      beforeFind: (data, option) => {
+        if (data.where.password) {
+          var sha256 = crypto.createHmac('sha256', 'thisismysecretkey');
+          sha256.update(data.where.password);
+          data.where.password = sha256.digest('hex');
+        }
+      }
+    },
     sequelize,
     modelName: 'users',
   });

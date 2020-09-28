@@ -8,8 +8,14 @@ module.exports = {
             let arrivalWithSch = moment().add(Number(req.query.departure) + Number(req.query.arrival), 'd').format('YYYYMMDDHHmm');
             req.session.departureDate = departureWithSch;
             req.session.arrivalDate = arrivalWithSch;
-            console.log(req.session);
-            res.send({status: true});
+
+            if (req.session.departureDate && req.session.arrivalDate) {
+                // if sessions are sended, send status 301 and redirect to 'url.com/search/result'
+                res.status(301).redirect('/search/result');
+            } else {
+                // if sessions are not sended, send status 404 with error message
+                res.status(404).send('error : invalid request: lack of session');
+            }
         }
     }
 }

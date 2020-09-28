@@ -5,6 +5,6 @@ const searchControllers = require('../controllers/search/index')
 
 router.get('/', searchControllers.searchDate.get);
 router.get('/result', searchControllers.searchNation.get);
-// router.get('/article/:id',searchControllers.searchFlight)
+router.get('/result/city', searchControllers.searchFlight.get);
 
 module.exports = router;
