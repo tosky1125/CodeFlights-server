@@ -35,10 +35,9 @@ app.use(session({
   saveUninitialized: true,
   cookie : {sameSite: 'none', secure : true }
 }));
-// app.use(passport.initialize());
-// app.use(passport.session());
+
 app.use(cors({
-	origin : ["https://dox4770prx0oi.cloudfront.net"]
+	origin : ["http://localhost:3000"]
 	,	credentials : true
 }));
 app.use(morgan('combined'));
@@ -46,35 +45,7 @@ app.use(express.json());
 app.use(express.urlencoded({
   extended: false
 }));
-
-
-
-
-// passport.serializeUser(function(user, done) {
-//     done(null, user);
-// });
-
-// passport.deserializeUser(function(obj, done) {
-//     done(null, obj);
-// });
-
-// passport.use(new GoogleStrategy({
-//         clientID: "956886343865-f8080heu2d93mukf82e027btrg0mgcl8.apps.googleusercontent.com",
-//         clientSecret: "aJx_2Fz6CygfcjdsPwY3XHKe",
-//         callbackURL: 'http://localhost:8080/auth/google/callback'
-//     }, function(accessToken, refreshToken, profile, done) {
-//         process.nextTick(function() {
-//             user = profile;
-//             return done(null, user);
-//         });
-//     }
-// ));
-
-// app.get('/auth/google', passport.authenticate('google',{ scope : ['profile']}))
-// app.get('/auth/google/callback', passport.authenticate('google', {failureRedirect:'/login'}), (req, res)=> res.redirect('/'))
-app.get('/',(req, res) => {
-  res.send('authenticated')
-});
+app.get('/', (req,res)=> res.send('hi'))
 app.use('/user', usersRouter);
 app.use('/post', postRouter);
 app.use('/search', searchRouter);
