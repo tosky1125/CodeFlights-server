@@ -31,6 +31,7 @@ module.exports = {
 
         // // dummy data
         // let departure = 202009290000;
+        // let departure = 202009290000;
         // let arrival = 202010100000;
 
         let uniq = {};
@@ -48,14 +49,14 @@ module.exports = {
                 arg.portName = arg.portName.slice(0, arg.portName.indexOf('/'));
             }
             // then sorted by date from session's departure and arrival 
-            if (Number(arg.estTime) > departureWithSch && Number(arg.estTime) < arrivalWithSch &&
-                Number(arg.schTime) > departureWithSch && Number(arg.schTime) < arrivalWithSch) {
+            if (Math.abs(Number(arg.estTime) - departureWithSch) < 10000 || 
+                Math.abs(Number(arg.schTime) - departureWithSch) < 10000) {
                 filterdByTime.push({ destinations: arg.portName });
             }
         })
         console.log(filterdByTime);
         let filterDuplicate = filterdByTime.filter(obj => !uniq[obj.destinations] && (uniq[obj.destinations] = true))
-        console.log(filterDuplicate);
+        console.log(filterDuplicate)
         res.send(filterDuplicate);
     }
 }

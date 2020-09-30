@@ -1,9 +1,10 @@
+const { query } = require('express');
+
 module.exports = {
     parsePost : async (query) => {
-        // console.log(clientID, clientSecret);
         const axios = require('axios');
         // 국가명만 query 로 넣는 경우, 여행을 제외한 정보들이 같이 오기 때문에 뒤에 "여행" 을 붙여 URI 를 만들었음
-        let queryString = encodeURI(query+"여행"); 
+        let queryString = encodeURI(query+"view point"); 
         let result = await axios({
             method: 'get',
             url: `https://openapi.naver.com/v1/search/blog.json?query=${queryString}`,
@@ -20,5 +21,22 @@ module.exports = {
             return ({id: 'n', title: arg.title.replace(/<\/?[^>]+(>|$)/g, ""), link: arg.link, contents: arg.description.replace(/<\/?[^>]+(>|$)/g, "").substring(0, 30)+'...'})
         });
         return postings;
+    },
+    parseImage : async (query) => {
+        const axios = require('axios');
+        // 국가명만 query 로 넣는 경우, 여행을 제외한 정보들이 같이 오기 때문에 뒤에 "여행" 을 붙여 URI 를 만들었음
+        let queryString = encodeURI(query+" 공항"); 
+        let result = await axios({
+            method: 'get',
+            url: `https://openapi.naver.com/v1/search/image?query=${queryString}&display=1`,
+            headers: {
+                // client 의 headers 정보 commit 전에 process.env 나 dotenv 로 갈아엎어야 할 듯... 
+                'X-Naver-Client-Id': 'MyheUeWlOZ48Hc2WSPns',
+                'X-Naver-Client-Secret': 'HqceBdNATi'
+            }
+        });
+        // 이미지는 여행지 당 한 개만 찾습니다
+        console.log(result.data.items);
+        // let imgLink = result.data.items
     }
 };
