@@ -2,7 +2,7 @@ const moment = require('moment');
 
 module.exports = {
     get: (req, res) => {
-	console.log(req.query);
+	console.log(`query : ${req.query}`);
         // case: query string is departure and arrival 
         if (!req.query.departureDate || !req.query.arrivalDate) {
             res.status(404).send({error: 'fullfill all requried query string'})
@@ -14,9 +14,11 @@ module.exports = {
             req.session.departureDate = departureWithSch;
             req.session.arrivalDate = arrivalWithSch;
 
+          console.log(`this is ${req.session}`)
             // if sessions are sended, send status 301 and redirect to 'url.com/search/result'
             if (req.session.departureDate && req.session.arrivalDate) {
-                res.redirect(301, '/search/result');
+               
+               res.redirect('http://codeflights.me-s3-5.s3-website.ap-northeast-2.amazonaws.com/search/result');
               // if sessions are not sended, send status 404 with error message
             } else {
                 res.status(404).send({error: 'sessions are not set yet'});

@@ -9,6 +9,7 @@ module.exports = {
         // if departure and arrival date are in session
         let departure = req.session.departureDate;
         let arrival = req.session.arrivalDate;
+      console.log(departure)
         // // dummy data
         // let departure = 202009290000;
         // let arrival = 202010100000;
@@ -17,6 +18,7 @@ module.exports = {
             attributes: ['portName', 'estTime', 'schTime'],
             raw: true
         });
+      
         if (nations.length === 0) {
             res.status(204).send({error: "there is no flights in this schedule"});
         }
@@ -32,7 +34,9 @@ module.exports = {
                 filterdByTime.push({ destination: arg.portName });
             }
         })
+      console.log(filterdByTime)
         let filterDuplicate = filterdByTime.filter(obj => !uniq[obj.destination] && (uniq[obj.destination] = true))
-        res.send(filterDuplicate);
+        console.log(filterDuplicate)  
+      res.send(filterDuplicate);
     }
 }
