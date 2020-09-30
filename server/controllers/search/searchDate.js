@@ -1,63 +1,51 @@
-const { flights } = require('../../models');
-const Sequelize = require('sequelize');
-const Op = Sequelize.Op;
-
+const moment = require('moment');
+const searchNation = require('./searchNation');
 module.exports = {
-    get: (req, res) => {
-        // console.log(req.params);
-        let date = req.params.dateparams.split('=') 
-        let departure = Number(date[0]);
-        let arrival = Number(date[1]);
+    post: (req, res) => {
+        // post's body check 
+        console.log(req.body);
+        // if (!req.body.arrivalDate || req.body.departureDate) {
+        //     res.status(404).send({error: 'fullfill all requirement'});
+        // } else {
+        //     let departureDate = req.body.departureDate;
+        //     let arrivalDate = req.body.arrivalDate;
 
-        let today = new Date();
-        // let todayString = `${today.getFullYear()}0${today.getMonth()+1}${today.getDate()}${today.getHours()}${String(today.getMinutes()).length === 2? today.getMinutes() : '0' + String(today.getMinutes())}`
-        let departureDateString = `${today.getFullYear()}${String(today.getMonth() + 1).length === 2? today.getMonth() + 1 : '0' + String(today.getMonth() + 1)}${String(today.getDate() + departure).length === 2? today.getDate() + departure : '0' + String(today.getDate() + departure)}${String(today.getHours()).length === 2? today.getHours() : '0' + String(today.getHours())}${String(today.getMinutes()).length === 2? today.getMinutes() : '0' + String(today.getMinutes())}`
-        // let departureDateString = String(Number(todayString) + Number(departure));
-        let arrivalDateString = `${today.getFullYear()}${String(today.getMonth() + 1).length === 2? today.getMonth() + 1 : '0' + String(today.getMonth() + 1)}${String(today.getDate() + departure + arrival).length === 2? today.getDate() + departure + arrival : '0' + String(today.getDate() + departure + arrival)}${String(today.getHours()).length === 2? today.getHours() : '0' + String(today.getHours())}${String(today.getMinutes()).length === 2? today.getMinutes() : '0' + String(today.getMinutes())}`
+        //     let departureWithSch = moment().add(Number(departureDate), 'd').format('YYYYMMDDHHmm');
+        //     let arrivalWithSch = moment().add(Number(departureDate) + Number(arrivalDate), 'd').format('YYYYMMDDHHmm');
 
-        console.log(`departure: ${departureDateString}, arrival: ${arrivalDateString}`);
+        //     // making session
+        //     req.session.departureDate = departureWithSch;
+        //     req.session.arrivalDate = arrivalWithSch;
 
-        // // 전체 항공정보를 가져오는 API
-        // flights.findAll({
-        //     // limit: 10,
-        //     raw: true
-        // }).then(result => {
-        //     let filtered = [];
-        //     result.map(arg => {
-        //         if (Number(arg.estTime) > Number(departureDateString)) {
-        //             filtered.push(arg);
-        //         }
-        //     });
-        //     res.send(filtered);
-        // });
-
-        // 날짜와 행선지만을 가져오는 API
-        flights.findAll({
-            raw: true
-        }).then(result => {
-            let nations = [];
-            result.map((arg) => {
-                if (Number(arg.estTime) > Number(departureDateString)) {
-                    nations.push({nation: arg.portName, code: arg.portCode, departure: arg.estTime});
-                }
-            });
-            let flag = {};
-            let filterNations = nations.filter(arg => {
-                if (flag[arg.code]) {
-                    return false;
-                }
-                flag[arg.code] = true;
-                return true;
-            });
-            console.log(filterNations);
-            res.send(filterNations);
-        });
-        
-        
-        // flights.findAll().then(result => (result.filter(arg => {
-        //     Number(arg.estTime) > Number(departureDateString) && 
-        //     Number(arg.schTime) > Number(departureDateString)
-        // }))).then(filtered => console.log(filtered));
+        //     // session check
+        //     if (!req.session.departureDate || !req.session.arrivalDate) {
+        //         res.status(404).send({error: 'sessions are not set yet'});
+        //     } else {
+        //         searchNation.get(req);
+        //     }
+        // }
     }
+	// console.log(`query : ${req.query}`);
+    //     // case: query string is departure and arrival 
+    //     if (!req.query.departureDate || !req.query.arrivalDate) {
+    //         res.status(404).send({error: 'fullfill all requried query string'})
+    //     } else {
+    //         let departureWithSch = moment().add(Number(req.query.departureDate), 'd').format('YYYYMMDDHHmm');
     
+    //         let arrivalWithSch = moment().add(Number(req.query.departureDate) + Number(req.query.arrivalDate), 'd').format('YYYYMMDDHHmm');
+    //         console.log(departureWithSch, arrivalWithSch);
+    //         req.session.departureDate = departureWithSch;
+    //         req.session.arrivalDate = arrivalWithSch;
+
+    //       console.log(`this is ${req.session}`)
+    //         // if sessions are sended, send status 301 and redirect to 'url.com/search/result'
+    //         if (req.session.departureDate && req.session.arrivalDate) {
+               
+    //            res.redirect('http://codeflights.me-s3-5.s3-website.ap-northeast-2.amazonaws.com/search/result');
+    //           // if sessions are not sended, send status 404 with error message
+    //         } else {
+    //             res.status(404).send({error: 'sessions are not set yet'});
+    //         }
+    //     }
+    // }
 }

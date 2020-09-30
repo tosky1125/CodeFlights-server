@@ -1,4 +1,4 @@
-const { users }= require('../../models');
+const { users }= require('../../models'); 
 
 module.exports = {
   post: (req, res) => {
@@ -17,8 +17,11 @@ module.exports = {
         status: false
       }))
       else {
+        res.cookie('red','chilli', { sameSite : 'none'})
+        console.log(req.cookies.red);
         session.userid = result.id;
-        res.status(201).json({
+        console.log(`this is ${JSON.stringify(session)}`)
+	      res.status(201).json({
           id:result.id
         })
       }

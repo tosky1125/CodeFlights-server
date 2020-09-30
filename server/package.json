@@ -11,13 +11,18 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.20.0",
+    "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
+    "google-auth-library": "^6.1.0",
+    "moment": "^2.29.0",
     "morgan": "^1.10.0",
     "mysql2": "^2.2.5",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "passport": "^0.4.1",
+    "passport-google-oauth20": "^2.0.0"
   },
   "devDependencies": {
     "eslint": "^7.9.0",
