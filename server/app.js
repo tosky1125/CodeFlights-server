@@ -20,13 +20,14 @@ try {
     cert: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/codeflights.xyz/cert.pem'), 'utf8').toString(),
   };
 
-  HTTPS.createServer(option, app).listen(port, () => {
-    console.log(`Server is started on port ${port}`);
-  });
-} catch (error) {
-  console.error('[HTTPS] HTTPS 오류가 발생하였습니다. HTTPS 서버는 실행되지 않습니다.');
-  console.warn(error);
-}
+
+//   HTTPS.createServer(option, app).listen(port, () => {
+//     console.log(`Server is started on port ${port}`);
+//   });
+// } catch (error) {
+//   console.error('[HTTPS] HTTPS 오류가 발생하였습니다. HTTPS 서버는 실행되지 않습니다.');
+//   console.warn(error);
+// }
 app.use(session({
   secret: 'codeflightsLTD@',
   resave: false,
@@ -44,15 +45,17 @@ app.use(cors({
   credentials: true
 }));
 
-app.use(cookieParser());
+
 app.use(morgan('combined'));
 app.use(express.json());
 app.use(express.urlencoded({
   extended: false
 }));
+
 app.get('/', (req, res) => 
   {  console.log(req.session)
   res.send('hi')})
+
 app.use('/user', usersRouter);
 app.use('/post', postRouter);
 app.use('/search', searchRouter);
