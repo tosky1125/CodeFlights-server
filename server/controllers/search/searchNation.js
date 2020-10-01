@@ -1,17 +1,38 @@
+const moment = require('moment');
 const { flights } = require('../../models');
 
+/**
+ * 기존: searchDate -> searchNation 으로 session check 를 통해 넘어가고 redirection
+ * 현재: 
+ *      departureDate, arrivalDate 를 body 안에 넣어서(type: integer) POST 를 보내줌
+ *      그리고 해당 날짜를 기준으로 바로 항공편을 찾아줌 (searchDate 는 필요없음)
+ *      session 은 searchNation 
+ *      search/result 로 post 를 날림
+ *      -> departureDate, arrivalDate 를 body 안에 넣어서(type: integer) POST 를 보내줌
+ *      서버에서는 해당 body 의 값들을 통해 여행가능한 지역을 return
+ *      + session 은 searchFlight 에서 다시 사용하기에 똑같이 부여해준다 
+ */
+
 module.exports = {
-    get: async (req, res) => {
-        // session check 
-        if (!req.session.departureDate || !req.session.arrivalDate) {
-            res.status(404).send({error: "fullfill the sessions"});
+    post: async (req, res) => {
+        console.log(req.body);
+        if (!req.body.departureDate || !req.body.arrivalDate) {
+            res.status(404).send({error: "fullfill the requirements"});
         }
-        // if departure and arrival date are in session
-        let departure = req.session.departureDate;
-        let arrival = req.session.arrivalDate;
+
+        // calculate schedule 
+        let departureDate = req.body.departureDate;
+        let arrivalDate = req.body.arrivalDate;
+        let departureWithSch = moment().add(Number(departureDate), 'd').format('YYYYMMDDHHmm');
+        let arrivalWithSch = moment().add(Number(departureDate) + Number(arrivalDate), 'd').format('YYYYMMDDHHmm');
+        // making session with schedule
+        req.session.departureDate = departureWithSch;
+        req.session.arrivalDate = arrivalWithSch;
+
         // // dummy data
         // let departure = 202009290000;
         // let arrival = 202010100000;
+
         let uniq = {};
         let nations = await flights.findAll({
             attributes: ['portName', 'estTime', 'schTime'],
@@ -27,12 +48,14 @@ module.exports = {
                 arg.portName = arg.portName.slice(0, arg.portName.indexOf('/'));
             }
             // then sorted by date from session's departure and arrival 
-            if (Number(arg.estTime) > departure && Number(arg.estTime) < arrival &&
-                Number(arg.schTime) > departure && Number(arg.schTime) < arrival) {
-                filterdByTime.push({ destination: arg.portName });
+            if (Number(arg.estTime) > departureWithSch && Number(arg.estTime) < arrivalWithSch &&
+                Number(arg.schTime) > departureWithSch && Number(arg.schTime) < arrivalWithSch) {
+                filterdByTime.push({ destinations: arg.portName });
             }
         })
-        let filterDuplicate = filterdByTime.filter(obj => !uniq[obj.destination] && (uniq[obj.destination] = true))
+        console.log(filterdByTime);
+        let filterDuplicate = filterdByTime.filter(obj => !uniq[obj.destinations] && (uniq[obj.destinations] = true))
+        console.log(filterDuplicate);
         res.send(filterDuplicate);
     }
 }

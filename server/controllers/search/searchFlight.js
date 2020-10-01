@@ -6,8 +6,15 @@ const axios = require('axios');
 const blog = require('./blog');
 const parsePost = blog.parsePost;
 
+/**
+ * 기존: searchDate -> searchNation 으로 session check 를 통해 넘어가고 redirection
+ * 현재: 
+ *      departureDate, arrivalDate 를 body 안에 넣어서(type: integer) POST 를 보내줌
+ *      그리고 해당 날짜를 기준으로 바로 항공편을 찾아줌 (searchDate 는 필요없음)
+ */
 module.exports = {
     get: async (req, res) => {
+
 	    // session check
        if (!req.session.departureDate || !req.session.arrivalDate) {
 		res.status(404).send({error: 'there is no needed session'});

@@ -11,29 +11,32 @@ const authRouter = require('./routes/auth')
 const fs = require('fs');
 const path = require('path');
 const HTTPS = require('https');
-const ssl = '8080'
+const ssl = '80'
 
-// try {
-//   const option = {
-//     ca: fs.readFileSync('/etc/letsencrypt/live/codeflights.xyz/fullchain.pem'),
-//     key: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/codeflights.xyz/privkey.pem'), 'utf8').toString(),
-//     cert: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/codeflights.xyz/cert.pem'), 'utf8').toString(),
-//   };
+try {
+  const option = {
+    ca: fs.readFileSync('/etc/letsencrypt/live/codeflights.xyz/fullchain.pem'),
+    key: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/codeflights.xyz/privkey.pem'), 'utf8').toString(),
+    cert: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/codeflights.xyz/cert.pem'), 'utf8').toString(),
+  };
 
-//   HTTPS.createServer(option, app).listen(port, () => {
-//     console.log(`Server is started on port ${port}`);
-//   });
-// } catch (error) {
-//   console.error('[HTTPS] HTTPS 오류가 발생하였습니다. HTTPS 서버는 실행되지 않습니다.');
-//   console.warn(error);
-// }
+
+  HTTPS.createServer(option, app).listen(port, () => {
+    console.log(`Server is started on port ${port}`);
+  });
+} catch (error) {
+  console.error('[HTTPS] HTTPS 오류가 발생하였습니다. HTTPS 서버는 실행되지 않습니다.');
+  console.warn(error);
+}
 app.use(session({
   secret: 'codeflightsLTD@',
   resave: false,
   saveUninitialized: true,
+  
   cookie: {
-    sameSite: 'none',
-    secure: true
+    sameSite: 'none', 
+    secure: true,
+    
   }
 }));
 
@@ -41,6 +44,7 @@ app.use(cors({
   origin: true,
   credentials: true
 }));
+
 
 app.use(morgan('combined'));
 app.use(express.json());
