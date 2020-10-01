@@ -32,6 +32,11 @@ module.exports = (sequelize, DataTypes) => {
           sha256.update(data.where.password);
           data.where.password = sha256.digest('hex');
         }
+      },
+      beforeUpdate : (data, option) => {
+        var sha256 = crypto.createHmac('sha256', 'thisismysecretkey');
+        sha256.update(data.password);
+        data.password = sha256.digest('hex');
       }
     },
     sequelize,

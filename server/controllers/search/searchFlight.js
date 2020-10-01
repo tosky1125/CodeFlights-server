@@ -45,7 +45,7 @@ module.exports = {
                 flightsAndPosting.flights = null;
             } else {
                 flightsList.map(arg => {
-                    // console.log(arg)
+                    
                     if(arg.portName.includes('/')) {
                         arg.portName = arg.portName.slice(0, arg.portName.indexOf('/'));
                     }
