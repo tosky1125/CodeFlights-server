@@ -1,6 +1,9 @@
-const { users }= require('../../models');
+const {
+  users
+} = require('../../models');
 module.exports = {
   post: (req, res) => {
+    console.log(req.session.userid)
     const {
       email,
       password
@@ -17,10 +20,7 @@ module.exports = {
       }))
       else {
         session.userid = result.id;
-        console.log(`this is ${JSON.stringify(session)}`)
-	      res.status(201).json({
-          id:result.id
-        })
+        res.status(201).json(result)
       }
     })
   }
