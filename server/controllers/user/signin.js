@@ -20,8 +20,6 @@ module.exports = {
         status: false
       }))
       else {
-        res.cookie('red','chilli', { sameSite : 'none'})
-        console.log(req.cookies.red);
         session.userid = result.id;
         res.status(201).json(result)
       }
