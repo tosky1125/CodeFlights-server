@@ -21,7 +21,7 @@ module.exports = {
         name
       } = payload
       let session = req.session
-      console.log(payload);
+      
       users.findOrCreate({
         where: {
           email: email
@@ -31,7 +31,7 @@ module.exports = {
           username: name
         }
       }).then(async ([user, exist]) => {
-        console.log(`this is ${user.id}`)
+        
         session.userid = user.id
         let data = {
           username: user.username,

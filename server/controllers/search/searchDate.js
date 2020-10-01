@@ -2,7 +2,7 @@ const moment = require('moment');
 
 module.exports = {
     get: (req, res) => {
-	console.log(req.query);
+	
         // case: query string is departure and arrival 
         if (!req.query.departureDate || !req.query.arrivalDate) {
             res.status(404).send({error: 'fullfill all requried query string'})
@@ -10,7 +10,7 @@ module.exports = {
             let departureWithSch = moment().add(Number(req.query.departureDate), 'd').format('YYYYMMDDHHmm');
     
             let arrivalWithSch = moment().add(Number(req.query.departureDate) + Number(req.query.arrivalDate), 'd').format('YYYYMMDDHHmm');
-            console.log(departureWithSch, arrivalWithSch);
+            
             req.session.departureDate = departureWithSch;
             req.session.arrivalDate = arrivalWithSch;
 

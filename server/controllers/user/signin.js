@@ -3,7 +3,7 @@ const {
 } = require('../../models');
 module.exports = {
   post: (req, res) => {
-    console.log(req.session.userid)
+    
     const {
       email,
       password

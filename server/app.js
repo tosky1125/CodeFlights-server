@@ -48,8 +48,6 @@ app.use(express.urlencoded({
   extended: false
 }));
 app.post('/', (req, res) => {
-  console.log(req.session)
-  req.session.userid = 1
   res.send('hi')
 })
 
