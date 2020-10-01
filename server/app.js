@@ -12,7 +12,7 @@ const fs = require('fs');
 const path = require('path');
 const HTTPS = require('https');
 const ssl = '80'
-const cookieParser = require('cookie-parser');
+
 try {
   const option = {
     ca: fs.readFileSync('/etc/letsencrypt/live/codeflights.xyz/fullchain.pem'),
@@ -21,13 +21,13 @@ try {
   };
 
 
-//   HTTPS.createServer(option, app).listen(port, () => {
-//     console.log(`Server is started on port ${port}`);
-//   });
-// } catch (error) {
-//   console.error('[HTTPS] HTTPS 오류가 발생하였습니다. HTTPS 서버는 실행되지 않습니다.');
-//   console.warn(error);
-// }
+  HTTPS.createServer(option, app).listen(port, () => {
+    console.log(`Server is started on port ${port}`);
+  });
+} catch (error) {
+  console.error('[HTTPS] HTTPS 오류가 발생하였습니다. HTTPS 서버는 실행되지 않습니다.');
+  console.warn(error);
+}
 app.use(session({
   secret: 'codeflightsLTD@',
   resave: false,
@@ -51,10 +51,9 @@ app.use(express.json());
 app.use(express.urlencoded({
   extended: false
 }));
-
-app.get('/', (req, res) => 
-  {  console.log(req.session)
-  res.send('hi')})
+app.post('/', (req, res) => {
+  res.send('hi')
+})
 
 app.use('/user', usersRouter);
 app.use('/post', postRouter);
