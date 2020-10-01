@@ -11,14 +11,15 @@ const authRouter = require('./routes/auth')
 const fs = require('fs');
 const path = require('path');
 const HTTPS = require('https');
-const ssl = '8080'
+const ssl = '80'
+const cookieParser = require('cookie-parser');
+try {
+  const option = {
+    ca: fs.readFileSync('/etc/letsencrypt/live/codeflights.xyz/fullchain.pem'),
+    key: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/codeflights.xyz/privkey.pem'), 'utf8').toString(),
+    cert: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/codeflights.xyz/cert.pem'), 'utf8').toString(),
+  };
 
-// try {
-//   const option = {
-//     ca: fs.readFileSync('/etc/letsencrypt/live/codeflights.xyz/fullchain.pem'),
-//     key: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/codeflights.xyz/privkey.pem'), 'utf8').toString(),
-//     cert: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/codeflights.xyz/cert.pem'), 'utf8').toString(),
-//   };
 
 //   HTTPS.createServer(option, app).listen(port, () => {
 //     console.log(`Server is started on port ${port}`);
@@ -31,9 +32,11 @@ app.use(session({
   secret: 'codeflightsLTD@',
   resave: false,
   saveUninitialized: true,
+  
   cookie: {
-    sameSite: 'none',
-    secure: true
+    sameSite: 'none', 
+    secure: true,
+    
   }
 }));
 
@@ -42,16 +45,16 @@ app.use(cors({
   credentials: true
 }));
 
+
 app.use(morgan('combined'));
 app.use(express.json());
 app.use(express.urlencoded({
   extended: false
 }));
-app.post('/', (req, res) => {
-  console.log(req.session)
-  req.session.userid = 1
-  res.send('hi')
-})
+
+app.get('/', (req, res) => 
+  {  console.log(req.session)
+  res.send('hi')})
 
 app.use('/user', usersRouter);
 app.use('/post', postRouter);
