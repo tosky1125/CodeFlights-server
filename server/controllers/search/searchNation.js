@@ -1,5 +1,6 @@
 const moment = require('moment');
 const { flights } = require('../../models');
+const { iata } = require('../../models');
 
 /**
  * 기존: searchDate -> searchNation 으로 session check 를 통해 넘어가고 redirection
@@ -31,11 +32,12 @@ module.exports = {
 
         // // dummy data
         // let departure = 202009290000;
+        // let departure = 202009290000;
         // let arrival = 202010100000;
 
         let uniq = {};
         let nations = await flights.findAll({
-            attributes: ['portName', 'estTime', 'schTime'],
+            attributes: ['portName', 'portCode', 'estTime', 'schTime'],
             raw: true
         });
         if (nations.length === 0) {
@@ -48,14 +50,27 @@ module.exports = {
                 arg.portName = arg.portName.slice(0, arg.portName.indexOf('/'));
             }
             // then sorted by date from session's departure and arrival 
-            if (Number(arg.estTime) > departureWithSch && Number(arg.estTime) < arrivalWithSch &&
-                Number(arg.schTime) > departureWithSch && Number(arg.schTime) < arrivalWithSch) {
-                filterdByTime.push({ destinations: arg.portName });
+            if (Math.abs(Number(arg.estTime) - departureWithSch) < 10000 || 
+                Math.abs(Number(arg.schTime) - departureWithSch) < 10000) {
+                filterdByTime.push({ destinations: arg.portName, code: arg.portCode });
             }
         })
         console.log(filterdByTime);
         let filterDuplicate = filterdByTime.filter(obj => !uniq[obj.destinations] && (uniq[obj.destinations] = true))
         console.log(filterDuplicate);
-        res.send(filterDuplicate);
+
+        let finalImage = await Promise.all(
+                filterDuplicate.map(async (arg) => {
+                let findImg = await iata.findOne({
+                    where: {cityCode: arg.code},
+                    attributes: ['img'],
+                    raw: true
+                })
+                arg.img = findImg.img;
+                return arg;
+            })
+        );
+        console.log(finalImage);
+        res.send(finalImage);
     }
 }

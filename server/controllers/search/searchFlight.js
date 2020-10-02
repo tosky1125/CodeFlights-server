@@ -36,7 +36,7 @@ module.exports = {
             res.status(404).send({error: 'there is no query string'});
         } else {
             // finding flights
-            let cityKor = req.query.city;
+            let cityKor = decodeURI(req.query.city);
             let flightsList = await flights.findAll({
                 where: {portName: {[Op.substring]: cityKor}},
                 raw: true
@@ -45,12 +45,12 @@ module.exports = {
                 flightsAndPosting.flights = null;
             } else {
                 flightsList.map(arg => {
-                    // console.log(arg)
+                    
                     if(arg.portName.includes('/')) {
                         arg.portName = arg.portName.slice(0, arg.portName.indexOf('/'));
                     }
-                    if (Number(arg.estTime) > departure && Number(arg.estTime) < arrival &&
-                        Number(arg.schTime) > departure && Number(arg.schTime) < arrival) {
+                    if (Math.abs(Number(arg.estTime) - departure) < 10000 || 
+                        Math.abs(Number(arg.schTime) - departure) < 10000) {
                         availableFlights.push({
                             city: arg.portName,
                             carrier: arg.airName,
