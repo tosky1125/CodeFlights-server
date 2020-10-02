@@ -16,7 +16,8 @@ module.exports = (sequelize, DataTypes) => {
   iata.init({
     cityNameEng: DataTypes.STRING,
     cityNameKor: DataTypes.STRING,
-    cityCode: DataTypes.STRING
+    cityCode: DataTypes.STRING,
+    img: DataTypes.TEXT
   }, {
     sequelize,
     modelName: 'iata',

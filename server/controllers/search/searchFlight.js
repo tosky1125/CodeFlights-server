@@ -49,8 +49,8 @@ module.exports = {
                     if(arg.portName.includes('/')) {
                         arg.portName = arg.portName.slice(0, arg.portName.indexOf('/'));
                     }
-                    if (Number(arg.estTime) > departure && Number(arg.estTime) < arrival &&
-                        Number(arg.schTime) > departure && Number(arg.schTime) < arrival) {
+                    if (Math.abs(Number(arg.estTime) - departure) < 10000 || 
+                        Math.abs(Number(arg.schTime) - departure) < 10000) {
                         availableFlights.push({
                             city: arg.portName,
                             carrier: arg.airName,
