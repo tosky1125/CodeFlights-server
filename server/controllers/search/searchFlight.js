@@ -36,7 +36,7 @@ module.exports = {
             res.status(404).send({error: 'there is no query string'});
         } else {
             // finding flights
-            let cityKor = req.query.city;
+            let cityKor = decodeURI(req.query.city);
             let flightsList = await flights.findAll({
                 where: {portName: {[Op.substring]: cityKor}},
                 raw: true
