@@ -12,13 +12,14 @@ const fs = require('fs');
 const path = require('path');
 const HTTPS = require('https');
 const ssl = '80'
-const cookieParser = require('cookie-parser');
+
 try {
   const option = {
     ca: fs.readFileSync('/etc/letsencrypt/live/codeflights.xyz/fullchain.pem'),
     key: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/codeflights.xyz/privkey.pem'), 'utf8').toString(),
     cert: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/codeflights.xyz/cert.pem'), 'utf8').toString(),
   };
+
 
   HTTPS.createServer(option, app).listen(port, () => {
     console.log(`Server is started on port ${port}`);
@@ -44,15 +45,16 @@ app.use(cors({
   credentials: true
 }));
 
-app.use(cookieParser());
+
 app.use(morgan('combined'));
 app.use(express.json());
 app.use(express.urlencoded({
   extended: false
 }));
-app.get('/', (req, res) => 
-  {  console.log(req.session)
-  res.send('hi')})
+app.post('/', (req, res) => {
+  res.send('hi')
+})
+
 app.use('/user', usersRouter);
 app.use('/post', postRouter);
 app.use('/search', searchRouter);

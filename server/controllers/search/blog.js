@@ -2,6 +2,7 @@ const { query } = require('express');
 
 module.exports = {
     parsePost : async (query) => {
+        
         const axios = require('axios');
         // 국가명만 query 로 넣는 경우, 여행을 제외한 정보들이 같이 오기 때문에 뒤에 "여행" 을 붙여 URI 를 만들었음
         let queryString = encodeURI(query+"view point"); 

@@ -4,7 +4,7 @@ const {
 const {
   OAuth2Client
 } = require('google-auth-library');
-const user = require('../user');
+
 
 module.exports = {
   post: (req, res) => {
@@ -15,9 +15,13 @@ module.exports = {
         audience: "956886343865-f8080heu2d93mukf82e027btrg0mgcl8.apps.googleusercontent.com",
       });
       const payload = ticket.getPayload();
-      const { email, name } = payload
+      const userid = payload['sub'];
+      const {
+        email,
+        name
+      } = payload
       let session = req.session
-
+      
       users.findOrCreate({
         where: {
           email: email
@@ -27,17 +31,16 @@ module.exports = {
           username: name
         }
       }).then(async ([user, exist]) => {
-        data = { user : user, exist : exist}
-        session.userid = user.id
-        if (!exist) {
-          
-          return res.status(200).send(JSON.stringify({status : true}))
-        }
         
-        res.status(200).send(JSON.stringify({data}))
+        session.userid = user.id
+        let data = {
+          username: user.username,
+          email: user.email
+        }
+        res.status(201).send(data)
       })
     }
     verify().catch(console.error);
   }
-  
+
 }
