@@ -13,7 +13,7 @@ const parsePost = blog.parsePost;
  *      그리고 해당 날짜를 기준으로 바로 항공편을 찾아줌 (searchDate 는 필요없음)
  */
 module.exports = {
-    get: async (req, res) => {
+    post: async (req, res) => {
 
 	    // session check
        if (!req.session.departureDate || !req.session.arrivalDate) {
@@ -32,11 +32,12 @@ module.exports = {
         let postingFromDB = [];
 
         // queryString check 
-        if (!req.query.city) {
+        if (!req.body.city) {
             res.status(404).send({error: 'there is no query string'});
         } else {
             // finding flights
-            let cityKor = decodeURI(req.query.city);
+            console.log(`payload: ${req.body.city}`);
+            let cityKor = req.body.city;
             let flightsList = await flights.findAll({
                 where: {portName: {[Op.substring]: cityKor}},
                 raw: true
