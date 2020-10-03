@@ -16,16 +16,16 @@ module.exports = {
     post: async (req, res) => {
 
 	    // session check
-       if (!req.session.departureDate || !req.session.arrivalDate) {
-		res.status(404).send({error: 'there is no needed session'});
-       } 
-       else {
+    //    if (!req.session.departureDate || !req.session.arrivalDate) {
+	// 	res.status(404).send({error: 'there is no needed session'});
+    //    } 
+    //    else {
         // date from session
-        let departure = req.session.departureDate;
-        let arrival = req.session.arrivalDate;
+        // let departure = req.session.departureDate;
+        // let arrival = req.session.arrivalDate;
         // dummy data
-        // let departure = 202010010853;
-        // let arrival = 202010040853;
+        let departure = 202010030853;
+        let arrival = 202010050853;
         let flightsAndPosting = {};
         let availableFlights = [];
         let positngFromBlog = [];
@@ -52,11 +52,12 @@ module.exports = {
                     }
                     if (Math.abs(Number(arg.estTime) - departure) < 10000 || 
                         Math.abs(Number(arg.schTime) - departure) < 10000) {
+                        let diff = moment().diff(moment([arg.estTime.substring(0, 4), arg.estTime.substring(4, 6)-1, arg.estTime.substring(6, 8), arg.estTime.substring(8, 10), arg.estTime.substring(10, 12)]), 'minutes');
                         availableFlights.push({
                             city: arg.portName,
                             carrier: arg.airName,
                             carrierNo: arg.airID,
-                            departure: moment(arg.estTime, 'YYYYMMDDHHmm').format("YYYY년 MM월 DD일 HH시 MM분")
+                            departure: diff > 0? `이미 출발한 항공편입니다` : `${Math.floor(diff/-60)}시간 ${-1*diff%-60}분 전`
                         });
                     }
                 });
@@ -85,6 +86,6 @@ module.exports = {
                 res.send(flightsAndPosting);
             }
         }
-    }
+    // }
   }
 }
