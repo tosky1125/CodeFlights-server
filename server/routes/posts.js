@@ -5,5 +5,5 @@ const articleControllers = require('../controllers/articles/index')
 router.post('/write', articleControllers.write.write)
 router.get('/article/:id',articleControllers.browse.browse)
 router.get('/likes/:id', articleControllers.likes.get)
-router.post('/likes:id', articleControllers.likes.post)
+router.post('/likes/:id', articleControllers.likes.post)
 module.exports = router;

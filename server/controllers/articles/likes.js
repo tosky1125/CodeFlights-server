@@ -5,8 +5,8 @@ const {
 module.exports = {
   post: (req, res) => {
     const articleId = req.params.id
-    const userId = req.session.userId
-    console.log(articleId, userID)
+    const userId = req.session.userid
+    console.log(articleId, userId)
     likes.findOrCreate({
       where: {
         userID : userId,
@@ -26,6 +26,7 @@ module.exports = {
           articleId : articleId
         }
       }).then(data => {
+	      console.log(data);
         res.status(201).send({likes : data})
       })
     })
