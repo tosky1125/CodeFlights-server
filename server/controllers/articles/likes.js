@@ -6,17 +6,22 @@ module.exports = {
   post: (req, res) => {
     const articleId = req.params.id
     const userId = req.session.userId
+    console.log(articleId, userID)
     likes.findOrCreate({
       where: {
-        userId : userId,
-        articleId : articleId
-      },
-      defaults : {
-        userId : userId,
-        articleId : articleId
+        userID : userId,
+        articleID : articleId
       }
-    }).then(() =>{
-      likes.count({
+    }).then(([number, exist]) =>{
+      if(!exist){
+        likes.destroy({
+          where : {
+            userID : userId,
+            articleID : articleId
+          }
+        })
+      } 
+      likes.count({ 
         where : {
           articleId : articleId
         }
