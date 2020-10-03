@@ -20,16 +20,16 @@ module.exports = {
     post: async (req, res) => {
 
 	    // session check
-    //    if (!req.session.departureDate || !req.session.arrivalDate) {
-	// 	res.status(404).send({error: 'there is no needed session'});
-    //    } 
-    //    else {
+        if (!req.session.departureDate || !req.session.arrivalDate) {
+	 	res.status(404).send({error: 'there is no needed session'});
+        } 
+        else {
         // date from session
-        // let departure = req.session.departureDate;
-        // let arrival = req.session.arrivalDate;
+         let departure = req.session.departureDate;
+         let arrival = req.session.arrivalDate;
         // dummy data
-        let departure = 202010040400;
-        let arrival = 202010050853;
+       // let departure = 202010030853;
+       // let arrival = 202010050853;
         let flightsAndPosting = {};
         let availableFlights = [];
         let positngFromBlog = [];
@@ -92,6 +92,6 @@ module.exports = {
                 res.send(flightsAndPosting);
             }
         }
-    // }
+     }
   }
 }
