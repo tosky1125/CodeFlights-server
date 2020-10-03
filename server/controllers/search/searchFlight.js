@@ -3,8 +3,10 @@ const { flights } = require('../../models');
 const { articles } = require('../../models');
 const { Op } = require("sequelize");
 const axios = require('axios');
-const blog = require('./blog');
+const blog = require('./searchBlog');
 const parsePost = blog.parsePost;
+const searchPrice = require('./searchPrice');
+const getPrice = searchPrice.getPrice;
 
 /**
  * 기존: searchDate -> searchNation 으로 session check 를 통해 넘어가고 redirection
@@ -50,19 +52,21 @@ module.exports = {
                     if(arg.portName.includes('/')) {
                         arg.portName = arg.portName.slice(0, arg.portName.indexOf('/'));
                     }
-                    if (Math.abs(Number(arg.estTime) - departure) < 10000 || 
-                        Math.abs(Number(arg.schTime) - departure) < 10000) {
+                    if (Math.abs(Number(arg.estTime) - departure) > 10000 || 
+                        Math.abs(Number(arg.schTime) - departure) > 10000) {
                         let diff = moment().diff(moment([arg.estTime.substring(0, 4), arg.estTime.substring(4, 6)-1, arg.estTime.substring(6, 8), arg.estTime.substring(8, 10), arg.estTime.substring(10, 12)]), 'minutes');
                         availableFlights.push({
                             city: arg.portName,
                             carrier: arg.airName,
                             carrierNo: arg.airID,
                             carrierLogo: arg.logo,
-                            departure: diff > 0? `이미 출발한 항공편입니다` : `${Math.floor(diff/-60)}시간 ${-1*diff%-60}분 전`
+                            departure: diff > 0? `이미 출발한 항공편입니다` : `${Math.floor(diff/-60)}시간 ${-1*diff%-60}분 전`,
+                            portCode: arg.portCode,
                         });
                     }
                 });
                 flightsAndPosting.flights = availableFlights;
+                flightsAndPosting.estPrice = await getPrice(availableFlights[availableFlights.length-1]);
             }
             // parse blog posting
             let blogPostings = await parsePost(cityKor);
