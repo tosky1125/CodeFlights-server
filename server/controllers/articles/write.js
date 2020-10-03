@@ -2,7 +2,6 @@ const { articles } = require('../../models')
 
 module.exports = {
   write: (req, res) => {
-console.log(req.body)
 	  let { title, content } = req.body
     let author = req.session.userid;
     

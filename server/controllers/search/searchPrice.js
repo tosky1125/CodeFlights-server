@@ -1,7 +1,6 @@
 const axios = require('axios');
 const moment = require('moment');
-
-// 항공권의 가장 마지막 arg 를 주면 될듯 
+// 시간이 24시간 넘어가면, 날짜단위로!
 let getPrice = async(arg) => {
     let result = await axios({
         method: "get",

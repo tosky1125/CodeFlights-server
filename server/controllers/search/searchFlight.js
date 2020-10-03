@@ -7,6 +7,8 @@ const blog = require('./searchBlog');
 const parsePost = blog.parsePost;
 const searchPrice = require('./searchPrice');
 const getPrice = searchPrice.getPrice;
+const dateHandler = require('./dateHandler');
+const handlingDate = dateHandler.handlingDate;
 
 /**
  * 기존: searchDate -> searchNation 으로 session check 를 통해 넘어가고 redirection
@@ -54,13 +56,12 @@ module.exports = {
                     }
                     if (Math.abs(Number(arg.estTime) - departure) > 10000 || 
                         Math.abs(Number(arg.schTime) - departure) > 10000) {
-                        let diff = moment().diff(moment([arg.estTime.substring(0, 4), arg.estTime.substring(4, 6)-1, arg.estTime.substring(6, 8), arg.estTime.substring(8, 10), arg.estTime.substring(10, 12)]), 'minutes');
                         availableFlights.push({
                             city: arg.portName,
                             carrier: arg.airName,
                             carrierNo: arg.airID,
                             carrierLogo: arg.logo,
-                            departure: diff > 0? `이미 출발한 항공편입니다` : `${Math.floor(diff/-60)}시간 ${-1*diff%-60}분 전`,
+                            departure: handlingDate(arg.estTime),
                             portCode: arg.portCode,
                         });
                     }
