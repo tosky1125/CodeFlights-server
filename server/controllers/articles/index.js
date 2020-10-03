@@ -1,4 +1,5 @@
 module.exports = {
   browse : require('./browse'),
-  write : require('./write')
+  write : require('./write'),
+  likes : require('./likes')
 }
