@@ -19,7 +19,8 @@ module.exports = (sequelize, DataTypes) => {
     airName: DataTypes.STRING,
     airID: DataTypes.STRING,
     estTime: DataTypes.STRING,
-    schTime: DataTypes.STRING
+    schTime: DataTypes.STRING,
+    logo: DataTypes.TEXT
   }, {
     sequelize,
     modelName: 'flights',
