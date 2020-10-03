@@ -57,6 +57,7 @@ module.exports = {
                             city: arg.portName,
                             carrier: arg.airName,
                             carrierNo: arg.airID,
+                            carrierLogo: arg.logo,
                             departure: diff > 0? `이미 출발한 항공편입니다` : `${Math.floor(diff/-60)}시간 ${-1*diff%-60}분 전`
                         });
                     }
