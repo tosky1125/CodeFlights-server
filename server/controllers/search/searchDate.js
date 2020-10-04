@@ -2,7 +2,7 @@ const moment = require('moment');
 const searchNation = require('./searchNation');
 module.exports = {
   get: (req, res) => {
-
+    // this file is now depricated!!
     // case: query string is departure and arrival 
     if (!req.query.departureDate || !req.query.arrivalDate) {
       res.status(404).send({

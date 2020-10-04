@@ -1,6 +1,6 @@
 const axios = require('axios');
 const moment = require('moment');
-// 시간이 24시간 넘어가면, 날짜단위로!
+
 let getPrice = async(arg) => {
     let result = await axios({
         method: "get",
