@@ -41,7 +41,8 @@ module.exports = {
       attributes: ['portName', 'portCode', 'estTime', 'schTime'],
       raw: true,
     });
-    if (nations.length === 0) {
+   
+	  if (nations.length === 0) {
       res.status(204).send({ error: 'there is no flights in this schedule' });
     }
     const filterdByTime = [];
@@ -57,10 +58,13 @@ module.exports = {
         filterdByTime.push({ destinations: arg.portName, code: arg.portCode });
       }
     });
+	
     const filterDuplicate = filterdByTime
       .filter((obj) => {
-        !uniq[obj.destinations] && (uniq[obj.destinations] = true);
+       return !uniq[obj.destinations] && (uniq[obj.destinations] = true);
       });
+
+	  console.log(filterDuplicate);
     const finalImage = await Promise.all(
       filterDuplicate.map(async (arg) => {
         const findImg = await iata.findOne({

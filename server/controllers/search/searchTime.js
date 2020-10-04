@@ -22,8 +22,7 @@ const searchTime = async (iataCode) => {
   });
 
   const arrivalTimeZone = arrivalTimeZoneResult.timeZone;
-  const { data } = result;
-  [result] = data;
+  result = result.data[0];
 
   if (result === undefined || result.arrivalTime === null || result.departureTime === null) {
     return 9999;
