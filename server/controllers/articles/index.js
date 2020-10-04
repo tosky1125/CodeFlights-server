@@ -1,6 +1,6 @@
 const browse = require('./browse');
 const write = require('./write');
-const write = require('./likes');
+const likes = require('./likes');
 
 module.exports = {
   browse,
