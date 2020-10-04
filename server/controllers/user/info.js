@@ -1,15 +1,17 @@
-const { users }= require('../../models');
+const {
+  users
+} = require('../../models');
 
 module.exports = {
   get: (req, res) => {
     const session = req.session;
-    
-	  users.findOne({
+
+    users.findOne({
       where: {
         id: session.userid
       }
     }).then(result => {
-	    
+
       if (result) {
         return res.status(200).send(JSON.stringify({
           email: result.email,
@@ -30,16 +32,14 @@ module.exports = {
     users.update({
       username: username,
       password: password
-    },{
+    }, {
       where: {
         id: session
       }
     }).then(
       result => {
         if (result) {
-          return res.status(202).send(JSON.stringify({
-            status: true
-          }))
+          return res.status(202).send(result)
         }
         res.status(400).send(JSON.stringify({
           status: false
