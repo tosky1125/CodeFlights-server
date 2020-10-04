@@ -1,26 +1,36 @@
 const axios = require('axios');
-const { iata } = require('../../models');
+// const { iata } = require('../../models');
 
-let searchTimeZone = async(cityCode) => {
-    let result = await axios({
-        method: 'get',
-        url: 'https://aviation-edge.com/v2/public/cityDatabase',
-        params: {
-            key: 'b8c24b-4ea0b5',
-            codeIataCity: cityCode
-        }
-    });
-    result = result.data;
-    console.log(result);   
-    return result.timezone;
+// airport code 를 넣으면
+const searchTimeZone = async (airportCode) => {
+  let result = await axios({
+    method: 'get',
+    url: 'https://aviation-edge.com/v2/public/airportDatabase',
+    params: {
+      key: 'b8c24b-4ea0b5',
+      codeIataAirport: airportCode,
+    },
+  });
+  const { data } = result;
+  [result] = data;
+  const { timezone } = result;
+  return timezone;
 };
 
-let searchCityCode = async(airportCode) => {
-    
-}
-
+// const updateTimeZone = async () => {
+//   const result = await iata.findAll({
+//     raw: true,
+//     attributes: ['airportCode'],
+//   });
+//   result.map((arg, index) => {
+//     setTimeout(async () => {
+//       const timeZoneInfo = await searchTimeZone(arg.airportCode);
+//       const updateResult = await iata.update(
+//         { timeZone: timeZoneInfo },
+//         { where: { airportCode: arg.airportCode } },
+//       );
+//     }, (index + 1) * 500);
+//   });
+// };
 
 module.exports = { searchTimeZone };
-
-searchTimeZone("AAA");
-

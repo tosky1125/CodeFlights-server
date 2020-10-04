@@ -1,44 +1,56 @@
 const axios = require('axios');
-const moment = require('moment');
 const timeZone = require('moment-timezone');
-const searchTimeZone = require('./searchTimeZone')['searchTimeZone'];
+const { iata } = require('../../models');
 
-let searchTime = async(iataCode) => {
-    let result = await axios({
-        method: 'get',
-        url: 'http://aviation-edge.com/v2/public/routes',
-        params: {
-            key: 'b8c24b-4ea0b5',
-            departureIata: 'ICN',
-            arrivalIata: iataCode
-        }
-    });
-    let timeZoneResult = await searchTimeZone(iataCode);
-    
-    result = result.data[0];
-    console.log(result);
-    let departureTime = moment(result.departureTime, 'hh:mm:ss');
-    let arrivalTime = moment(result.arrivalTime, 'hh:mm:ss');
-    let estTime = departureTime.diff(arrivalTime, "minutes");
-    
-    estTime = Math.abs(estTime);
+const searchTime = async (iataCode) => {
+  let result = await axios({
+    method: 'get',
+    url: 'http://aviation-edge.com/v2/public/routes',
+    params: {
+      key: 'b8c24b-4ea0b5',
+      departureIata: 'ICN',
+      arrivalIata: iataCode,
+    },
+  });
 
-    if (estTime / 60 > 0) {
-        let hour = Math.floor(estTime/60);
-        let hourAccm = hour*60;
-        let minutes = estTime - hourAccm;
+  const arrivalTimeZoneResult = await iata.findOne({
+    attributes: ['timeZone'],
+    where: {
+      airportCode: iataCode,
+    },
+    raw: true,
+  });
 
-        if (minutes === 0) {
-            console.log(`비행시간: ${hour}시간`)
-            return `${hour}시간 소요` 
-        } else {
-            console.log(`비행시간: ${hour}시간 ${minutes}분`)
-            return `${hour}시간 ${minutes}분 소요`
-        }
-    } else {
-        console.log(`비행시간: ${estTime}분`)
-        return `${estTime}분 소요`
+  const arrivalTimeZone = arrivalTimeZoneResult.timeZone;
+  const { data } = result;
+  [result] = data;
+
+  if (result === undefined || result.arrivalTime === null || result.departureTime === null) {
+    return 9999;
+  }
+  const departureTime = timeZone.tz(result.departureTime, 'hh:mm:ss', 'Asia/Seoul');
+  const arrivalTime = timeZone.tz(result.arrivalTime, 'hh:mm:ss', arrivalTimeZone);
+  let estTime = departureTime.diff(arrivalTime, 'minutes');
+  estTime = Math.abs(estTime);
+  return estTime;
+};
+
+const hfTime = (estTime) => {
+  if (estTime === 9999) {
+    return '운항정보를 받아올 수 없습니다';
+  }
+  if (estTime / 60 > 0) {
+    const hour = Math.floor(estTime / 60);
+    const hourAccm = hour * 60;
+    const minutes = estTime - hourAccm;
+
+    if (minutes === 0) {
+      return `약 ${hour}시간 소요`;
     }
-}
+    return `약 ${hour}시간 ${minutes}분 소요`;
+  }
+  return `약 ${estTime}분 소요`;
+};
 
-searchTime("YVR");
+// searchTime("LAX");
+module.exports = { searchTime, hfTime };
