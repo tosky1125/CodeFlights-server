@@ -1,30 +1,32 @@
-const { users }= require('../../models');
+const {
+  users,
+} = require('../../models');
 
 module.exports = {
   post: (req, res) => {
     const {
       email,
       username,
-      password
+      password,
     } = req.body;
 
     users.findOrCreate({
       where: {
-        email: email
+        email,
       },
       defaults: {
-        password: password,
-        username: username
-      }
-    }).then(async ([user, exist]) => {
+        password,
+        username,
+      },
+    }).then(async ([, exist]) => {
       if (!exist) {
         return res.status(409).send(JSON.stringify({
-          status: false
-        }))
-      } 
-      res.status(200).send(JSON.stringify({
-        status : true
-      }))
-    })
-  }
-}
+          status: false,
+        }));
+      }
+      return res.status(200).send(JSON.stringify({
+        status: true,
+      }));
+    });
+  },
+};
