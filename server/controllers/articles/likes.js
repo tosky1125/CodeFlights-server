@@ -6,7 +6,7 @@ module.exports = {
   post: (req, res) => {
     const articleId = req.params.id
     const userId = req.session.userid
-    console.log(articleId, userId)
+    let like = true;
     likes.findOrCreate({
       where: {
         userID : userId,
@@ -14,6 +14,7 @@ module.exports = {
       }
     }).then(([number, exist]) =>{
       if(!exist){
+	like = false;
         likes.destroy({
           where : {
             userID : userId,
@@ -27,7 +28,7 @@ module.exports = {
         }
       }).then(data => {
 	      console.log(data);
-        res.status(201).send({likes : data})
+        res.status(201).send({likes : data, like : like})
       })
     })
   },

@@ -39,6 +39,7 @@ module.exports = {
     }).then(
       result => {
         if (result) {
+		console.log(result);
           return res.status(202).send(result)
         }
         res.status(400).send(JSON.stringify({
