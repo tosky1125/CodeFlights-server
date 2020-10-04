@@ -20,6 +20,7 @@
     "google-auth-library": "^6.1.0",
     "jssoup": "0.0.12",
     "moment": "^2.29.0",
+    "moment-timezone": "^0.5.31",
     "morgan": "^1.10.0",
     "mysql2": "^2.2.5",
     "node-html-parser": "^1.2.21",

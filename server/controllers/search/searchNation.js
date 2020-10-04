@@ -62,7 +62,7 @@ module.exports = {
         let finalImage = await Promise.all(
                 filterDuplicate.map(async (arg) => {
                 let findImg = await iata.findOne({
-                    where: {cityCode: arg.code},
+                    where: {airportCode: arg.code},
                     attributes: ['img'],
                     raw: true
                 })
