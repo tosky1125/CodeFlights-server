@@ -1,3 +1,5 @@
+const google = require('./google');
+
 module.exports = {
-  google : require('./google')
-}
+  google,
+};

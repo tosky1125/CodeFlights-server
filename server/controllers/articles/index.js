@@ -1,4 +1,9 @@
+const browse = require('./browse');
+const write = require('./write');
+const likes = require('./likes');
+
 module.exports = {
-  browse : require('./browse'),
-  write : require('./write')
-}
+  browse,
+  write,
+  likes,
+};

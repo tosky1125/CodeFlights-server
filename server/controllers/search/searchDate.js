@@ -1,22 +1,22 @@
 const moment = require('moment');
-const searchNation = require('./searchNation');
+
 module.exports = {
   get: (req, res) => {
-
-    // case: query string is departure and arrival 
+    // this file is now depricated!!
+    // case: query string is departure and arrival
     if (!req.query.departureDate || !req.query.arrivalDate) {
       res.status(404).send({
-        error: 'fullfill all requried query string'
-      })
+        error: 'fullfill all requried query string',
+      });
     } else {
-      let departureWithSch = moment().add(Number(req.query.departureDate), 'd').format('YYYYMMDDHHmm');
+      const departureWithSch = moment().add(Number(req.query.departureDate), 'd').format('YYYYMMDDHHmm');
 
-      let arrivalWithSch = moment().add(Number(req.query.departureDate) + Number(req.query.arrivalDate), 'd').format('YYYYMMDDHHmm');
+      const arrivalWithSch = moment().add(Number(req.query.departureDate) + Number(req.query.arrivalDate), 'd').format('YYYYMMDDHHmm');
 
       req.session.departureDate = departureWithSch;
       req.session.arrivalDate = arrivalWithSch;
     }
-  }
+  },
   //     // making session
   //     req.session.departureDate = departureWithSch;
   //     req.session.arrivalDate = arrivalWithSch;
@@ -28,15 +28,17 @@ module.exports = {
   //         searchNation.get(req);
   //     }
   // }
-}
+};
 // console.log(`query : ${req.query}`);
-//     // case: query string is departure and arrival 
+//     // case: query string is departure and arrival
 //     if (!req.query.departureDate || !req.query.arrivalDate) {
 //         res.status(404).send({error: 'fullfill all requried query string'})
 //     } else {
-//         let departureWithSch = moment().add(Number(req.query.departureDate), 'd').format('YYYYMMDDHHmm');
+//         let departureWithSch = moment().add(Number(req.query.departureDate), 'd')
+//         .format('YYYYMMDDHHmm');
 
-//         let arrivalWithSch = moment().add(Number(req.query.departureDate) + Number(req.query.arrivalDate), 'd').format('YYYYMMDDHHmm');
+//         let arrivalWithSch = moment().add(Number(req.query.departureDate) +
+//         Number(req.query.arrivalDate), 'd').format('YYYYMMDDHHmm');
 //         console.log(departureWithSch, arrivalWithSch);
 //         req.session.departureDate = departureWithSch;
 //         req.session.arrivalDate = arrivalWithSch;

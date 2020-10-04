@@ -1,14 +1,12 @@
-const { articles } = require('../../models')
+const { articles } = require('../../models');
 
 module.exports = {
   browse: (req, res) => {
-    let id = req.params.id
+    const { id } = req.params;
     articles.findOne({
       where: {
-        id: id
-      }
-    }).then(result => {
-      res.status(200).send(result)
-    })
-  }
-}
+        id,
+      },
+    }).then((result) => res.status(200).send(result));
+  },
+};
