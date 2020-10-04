@@ -10,12 +10,6 @@ const getPrice = searchPrice.getPrice;
 const dateHandler = require('./dateHandler');
 const handlingDate = dateHandler.handlingDate;
 
-/**
- * 기존: searchDate -> searchNation 으로 session check 를 통해 넘어가고 redirection
- * 현재: 
- *      departureDate, arrivalDate 를 body 안에 넣어서(type: integer) POST 를 보내줌
- *      그리고 해당 날짜를 기준으로 바로 항공편을 찾아줌 (searchDate 는 필요없음)
- */
 module.exports = {
     post: async (req, res) => {
 
@@ -24,12 +18,14 @@ module.exports = {
 	 	res.status(404).send({error: 'there is no needed session'});
         } 
         else {
+
         // date from session
          let departure = req.session.departureDate;
          let arrival = req.session.arrivalDate;
-        // dummy data
-       // let departure = 202010030853;
-       // let arrival = 202010050853;
+
+        // dummy data 
+        // let departure = moment().add(3, 'd').format('YYYYMMDDHHmm');;
+        // let arrival = 202010050853;
         let flightsAndPosting = {};
         let availableFlights = [];
         let positngFromBlog = [];
@@ -54,8 +50,8 @@ module.exports = {
                     if(arg.portName.includes('/')) {
                         arg.portName = arg.portName.slice(0, arg.portName.indexOf('/'));
                     }
-                    if (Math.abs(Number(arg.estTime) - departure) > 10000 || 
-                        Math.abs(Number(arg.schTime) - departure) > 10000) {
+                    if (Number(arg.estTime) - departure > 0 && 
+                        Number(arg.schTime) - departure > 0) {
                         availableFlights.push({
                             city: arg.portName,
                             carrier: arg.airName,
