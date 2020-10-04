@@ -1,28 +1,30 @@
-
-const { users }= require('../../models'); 
-
+const {
+  users,
+} = require('../../models');
 
 module.exports = {
   post: (req, res) => {
-    
     const {
       email,
-      password
+      password,
     } = req.body;
-    let session = req.session
+    const {
+      session,
+    } = req;
     users.findOne({
       where: {
-        email: email,
-        password: password
-      }
-    }).then(result => {
-      if (!result) res.status(401).send(JSON.stringify({
-        status: false
-      }))
-      else {
+        email,
+        password,
+      },
+    }).then((result) => {
+      if (!result) {
+        res.status(401).send(JSON.stringify({
+          status: false,
+        }));
+      } else {
         session.userid = result.id;
-        res.status(201).json(result)
+        res.status(201).json(result);
       }
-    })
-  }
-}
+    });
+  },
+};
