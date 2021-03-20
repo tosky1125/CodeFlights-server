@@ -1,14 +1,11 @@
-const express = require('express');
-const session = require('express-session');
-const cors = require('cors');
-const morgan = require('morgan');
-const fs = require('fs');
-const path = require('path');
-const HTTPS = require('https');
-const usersRouter = require('./src/user/UserController');
-const postRouter = require('./src/article/posts');
-const searchRouter = require('./src/ticket/search');
-const authRouter = require('./src/auth/auth');
+import * as fs from 'fs';
+import * as path from 'path';
+import * as HTTPS from 'https';
+import express = require("express");
+import session = require("express-session");
+import cors = require("cors");
+import morgan = require("morgan");
+import UserController from "./src/user/UserController";
 
 const app = express();
 const ssl = '443';
@@ -52,8 +49,6 @@ app.get('/', (req, res) => {
   res.send('hi');
 });
 
-app.use('/user', usersRouter);
-app.use('/post', postRouter);
-app.use('/search', searchRouter);
-app.use('/auth', authRouter);
+app.use(UserController.getRouter());
+
 app.listen(port);
